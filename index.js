@@ -63,6 +63,17 @@ async function run() {
             const result = await volunteerCollection.insertOne(data);
             res.send(result)
         })
+
+        // find my posts
+        app.get("/myposts", async(req,res)=>{
+            const email = req.query.email;
+            const query = {organizer_email : email };
+            const cursor = volunteerCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // post requested volunteer 
         // Send a ping to confirm a successful connection
 
         await client.db("admin").command({ ping: 1 });
