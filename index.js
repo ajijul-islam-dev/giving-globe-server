@@ -26,6 +26,8 @@ async function run() {
     try {
         const database = client.db("VolunteerDB");
         const volunteerCollection = database.collection("VolunteerCollection");
+        const requestedDatabase = client.db("requestedPostDB");
+        const requestedCollection = requestedDatabase.collection("requestedPostCollection");
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
@@ -74,6 +76,11 @@ async function run() {
         })
 
         // post requested volunteer 
+        app.post("/requestedpost", async(req,res)=>{
+            const data = req.body;
+            const result = await requestedCollection.insertOne(data);
+            res.send(result);
+        })
         // Send a ping to confirm a successful connection
 
         await client.db("admin").command({ ping: 1 });
