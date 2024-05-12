@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -40,6 +40,28 @@ async function run() {
             const result = volunteerCollection.find().sort({deadline: 1}).limit(6);
             const final = await result.toArray()
             res.send(final)
+        })
+
+        // find all post data 
+        app.get("/volunteerposts", async(req,res)=>{
+            const cursor =  volunteerCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // find specific post by id 
+        app.get("/volunteerpost/:id", async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id : new ObjectId(id)};
+            const result = await volunteerCollection.findOne(query);
+            res.send(result);
+        })
+
+        // add post to database
+        app.post("/addvolunteerpost", async(req,res)=>{
+            const data = req.body;
+            const result = await volunteerCollection.insertOne(data);
+            res.send(result)
         })
         // Send a ping to confirm a successful connection
 
