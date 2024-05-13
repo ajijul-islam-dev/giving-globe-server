@@ -81,6 +81,30 @@ async function run() {
             const result = await requestedCollection.insertOne(data);
             res.send(result);
         })
+
+        // get requested volunteer 
+        app.get("/requestedpost",async(req,res)=>{
+            const email = req.query.email;
+            const query = {volunteer_email : email};
+            const result = await requestedCollection.find(query).toArray();
+            res.send(result); 
+        })
+
+        // delete requested post
+        app.delete("/requestedpost/:id", async(req,res)=>{
+            const id = req.params.id;
+            const query ={_id : new ObjectId(id)};
+            const result = await requestedCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // delete post
+        app.delete("/mypost/:id", async(req,res)=>{
+            const id = req.params.id;
+            const query ={_id : new ObjectId(id)};
+            const result = await volunteerCollection.deleteOne(query);
+            res.send(result);
+        })
         // Send a ping to confirm a successful connection
 
         await client.db("admin").command({ ping: 1 });
