@@ -105,6 +105,39 @@ async function run() {
             const result = await volunteerCollection.deleteOne(query);
             res.send(result);
         })
+
+        // update post
+        app.put("/mypost/update/:id",async(req,res)=>{
+            const id = req.params.id;
+            const data = req.body;
+            const query = {_id : new ObjectId(id)};
+            const options = { upsert: true };
+            const updatedData = {
+                $set : {
+                    thumbnail : data.thumbnail,
+                    post_title : data.post_title,
+                    description : data.description,
+                    category : data.category,
+                    location : data.location,
+                    volunteers_needed : data.volunteers_needed,
+                    organizer_name : data.organizer_name,
+                    organizer_email : data.organizer_email,
+                    deadline : data.deadline
+                }
+            }
+            const result = await volunteerCollection.updateOne(query,updatedData,options)
+            res.send(result)
+        })
+
+        // search functionality
+        app.get("/mypost/search",async(req,res)=>{
+            const title = req.query.text;
+            console.log(title);
+            const query = {post_title : {$regex : title}} 
+            const cursor = volunteerCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
         // Send a ping to confirm a successful connection
 
         await client.db("admin").command({ ping: 1 });
