@@ -33,7 +33,7 @@ async function run() {
         await client.connect();
 
         // server test
-        app.get("/", async (req, res) => {
+        app.get("/",(req, res) => {
             res.send("data coming soon...")
         })
 
