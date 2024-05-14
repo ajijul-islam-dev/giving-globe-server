@@ -30,7 +30,7 @@ async function run() {
         const requestedDatabase = client.db("requestedPostDB");
         const requestedCollection = requestedDatabase.collection("requestedPostCollection");
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        //await client.connect();
 
         // server test
         app.get("/",(req, res) => {
