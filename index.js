@@ -1,5 +1,7 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -7,7 +9,13 @@ const port = process.env.PORT || 3000;
 
 
 // midlewares
-app.use(cors());
+app.use(cors({
+    origin : [
+        "http://localhost:5173",
+        "https://assignment-11-1edee.web.app"
+    ],
+    credentials : true
+}));
 app.use(express.json())
 
 
@@ -138,6 +146,19 @@ async function run() {
             const cursor = volunteerCollection.find(query);
             const result = await cursor.toArray();
             res.send(result);
+        })
+
+        // JWT token
+        app.post("/jwt", async(req,res)=>{
+            const user = req.body;
+            const token = jwt.sign(user,"secret",{
+                expiresIn : "1h"
+            })
+            res.cookie("token",token,{
+                httpOnly: false,
+                secure: true,
+                sameSite : 'none'
+            }).send({success : true})
         })
         // Send a ping to confirm a successful connection
 
